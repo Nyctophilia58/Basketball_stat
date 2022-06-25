@@ -7,9 +7,13 @@ players_data = constants.PLAYERS
 panthers = []
 bandits = []
 warriors = []
-height_list_panthers = []
-height_list_bandits = []
-height_list_warriors = []
+experienced_height_list = []
+inexperienced_height_list = []
+guardian_list_ex = []
+guardian_list_inex = []
+panthers_guardians = []
+bandits_guardians = []
+warriors_guardians = []
 
 
 def menu():
@@ -50,21 +54,30 @@ def menu():
         if choice2 == 1:
             print(f"\nTeam: {teams_data[0]} Stats"
                   f"\n--------------------"
-                  f"\nTotal players: {len(panthers)}\n")
-            avg_height = mean(height_list_panthers)
-            print(f"The average height of the team: {avg_height}\n")
+                  f"\nTotal players: {len(panthers)}"
+                  f"\nTotal experienced: 3"
+                  f"\nTotal inexperienced: 3")
+            average_height = mean(experienced_height_list[choice2-1::3]) + mean(inexperienced_height_list[choice2-1::3])
+            print(f"Average height: {average_height/2}\n")
             print("Players on Team:")
             print(" " + ", ".join(panthers))
+            print("\nGuardians: ")
+            print(" " + ", ".join(str(item) for inner_list in panthers_guardians for item in inner_list))
             break
         elif choice2 == 2:
             print(f""
                   f"\nTeam: {teams_data[1]} Stats"
                   f"\n--------------------"
-                  f"\nTotal players: {len(bandits)}\n")
-            avg_height = mean(height_list_bandits)
-            print(f"The average height of the team: {avg_height}\n")
+                  f"\nTotal players: {len(bandits)}"
+                  f"\nTotal experienced: 3"
+                  f"\nTotal inexperienced: 3")
+            average_height = mean(experienced_height_list[choice2 - 1::3]) +\
+                             mean(inexperienced_height_list[choice2 - 1::3])
+            print(f"Average height: {average_height / 2}\n")
             print("Players on Team:")
             print(" " + ", ".join(bandits))
+            print("\nGuardians: ")
+            print(" " + ", ".join(str(item) for inner_list in bandits_guardians for item in inner_list))
             break
         elif choice2 == 3:
             print(f""
@@ -73,10 +86,13 @@ def menu():
                   f"\nTotal players: {len(warriors)}"
                   f"\nTotal experienced: 3"
                   f"\nTotal inexperienced: 3")
-            avg_height = mean(height_list_warriors)
-            print(f"The average height of the team: {avg_height}\n")
+            average_height = mean(experienced_height_list[choice2 - 1::3]) + \
+                             mean(inexperienced_height_list[choice2 - 1::3])
+            print(f"Average height: {average_height / 2}\n")
             print("Players on Team:")
             print(" " + ", ".join(warriors))
+            print("\nGuardians: ")
+            print(" " + ", ".join(str(item) for inner_list in warriors_guardians for item in inner_list))
             break
     if count == 0:
         press()
@@ -98,8 +114,12 @@ def clean_data(data):
         item["height"] = item["height"].split()[0]
         item["height"] = int(item["height"])
         if item["experience"] == "YES":
+            experienced_height_list.append(item["height"])
+            guardian_list_ex.append(guard)
             experience = True
         else:
+            inexperienced_height_list.append(item["height"])
+            guardian_list_inex.append(guard)
             experience = False
         cleaned.append(
             {
@@ -113,14 +133,21 @@ def clean_data(data):
 
 
 def balance_teams():
-    num_players = len(players_data) // len(teams_data)
-    for i in range(num_players):
-        panthers.append(players_data.pop(0)["name"])
-        height_list_panthers.append(players_data.pop(0)["height"])
-        bandits.append(players_data.pop(0)["name"])
-        height_list_bandits.append(players_data.pop(0)["height"])
-        warriors.append(players_data.pop(0)["name"])
-        height_list_warriors.append(players_data.pop(0)["height"])
+    inexperienced_players = [item["name"] for item in players_data if item["experience"] == "NO"]
+    experienced_players = [item["name"] for item in players_data if item["experience"] == "YES"]
+    for i in range(3):
+        panthers.append(experienced_players.pop(0))
+        panthers.append(inexperienced_players.pop(0))
+        panthers_guardians.append(guardian_list_ex.pop(0))
+        panthers_guardians.append(guardian_list_inex.pop(0))
+        bandits.append(experienced_players.pop(0))
+        bandits.append(inexperienced_players.pop(0))
+        bandits_guardians.append(guardian_list_ex.pop(0))
+        bandits_guardians.append(guardian_list_inex.pop(0))
+        warriors.append(experienced_players.pop(0))
+        warriors.append(inexperienced_players.pop(0))
+        warriors_guardians.append(guardian_list_ex.pop(0))
+        warriors_guardians.append(guardian_list_inex.pop(0))
 
 
 if __name__ == "__main__":
