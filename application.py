@@ -1,5 +1,6 @@
 from statistics import mean
 import constants
+import time
 
 
 teams_data = constants.TEAMS
@@ -37,7 +38,7 @@ def menu():
                   f"\n\t3) Warriors\n"
                   )
         elif choice1 == 2:
-            print("Thanks for your consideration")
+            print("\nThanks for your consideration")
             count = 1
             break
         else:
@@ -73,7 +74,7 @@ def menu():
                   f"\nTotal inexperienced: 3")
             average_height = mean(experienced_height_list[choice2 - 1::3]) +\
                              mean(inexperienced_height_list[choice2 - 1::3])
-            print(f"Average height: {average_height / 2}\n")
+            print(f"Average height: {round(average_height / 2)}\n")
             print("Players on Team:")
             print(" " + ", ".join(bandits))
             print("\nGuardians: ")
@@ -88,7 +89,7 @@ def menu():
                   f"\nTotal inexperienced: 3")
             average_height = mean(experienced_height_list[choice2 - 1::3]) + \
                              mean(inexperienced_height_list[choice2 - 1::3])
-            print(f"Average height: {average_height / 2}\n")
+            print(f"Average height: {round(average_height / 2)}\n")
             print("Players on Team:")
             print(" " + ", ".join(warriors))
             print("\nGuardians: ")
@@ -99,12 +100,14 @@ def menu():
 
 
 def press():
-    key = input("\nPress ENTER to continue...")
-    if not key:
-        print("")
+    time.sleep(2)
+    choice1 = input("\nWould you like to play again? Y/N ")
+    if choice1.lower() == "y":
+        print("\n")
         menu()
     else:
-        print("See ya!!")
+        print("Thanks for playing our game!!")
+        time.sleep(1.5)
 
 
 def clean_data(data):
